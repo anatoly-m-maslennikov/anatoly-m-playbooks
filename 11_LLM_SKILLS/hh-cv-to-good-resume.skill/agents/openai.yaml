@@ -1,0 +1,4 @@
+interface:
+  display_name: "HH CV to Good Resume"
+  short_description: "Convert hh.ru CVs into concise resumes."
+  default_prompt: "Use $hh-cv-to-good-resume to turn this hh.ru CV into a short professional resume for the target role."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CNG Podcast to Post"
+  short_description: "Turn CNG transcripts into post drafts."
+  default_prompt: "Use $cng-podcast-to-post to transform this raw transcript into a CNG post draft."

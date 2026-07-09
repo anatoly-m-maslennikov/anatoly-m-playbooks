@@ -1,0 +1,4 @@
+interface:
+  display_name: "CNG Post Packaging"
+  short_description: "Create CNG titles, subtitles, promos."
+  default_prompt: "Use $cng-post-to-title-subtitle-promo to generate title, subtitle, and promo variants for this CNG post."

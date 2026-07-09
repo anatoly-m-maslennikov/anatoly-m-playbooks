@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refine Article Prompt"
+  short_description: "Infer prompt improvements from an edit."
+  default_prompt: "Use $refine-article-prompt-from-redacted-example to rewrite this article prompt from the source and redacted target article."

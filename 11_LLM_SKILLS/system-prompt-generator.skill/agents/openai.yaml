@@ -1,0 +1,4 @@
+interface:
+  display_name: "System Prompt Generator"
+  short_description: "Create production-ready system prompts."
+  default_prompt: "Use $system-prompt-generator to create a production-ready system prompt for this assistant or workflow."

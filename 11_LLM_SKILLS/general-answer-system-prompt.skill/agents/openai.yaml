@@ -1,0 +1,4 @@
+interface:
+  display_name: "General Answer Prompt"
+  short_description: "Use a concise answer system prompt."
+  default_prompt: "Use $general-answer-system-prompt to answer this task using the preserved general assistant contract."
