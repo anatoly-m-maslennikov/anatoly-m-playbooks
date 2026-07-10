@@ -1,0 +1,4 @@
+interface:
+  display_name: "CNG Create Episode Images"
+  short_description: "Generate CNG post and podcast image assets."
+  default_prompt: "Use $cng-create-ep-images to create a CNG post banner, podcast preview, and sibling Obsidian assets page for this post."

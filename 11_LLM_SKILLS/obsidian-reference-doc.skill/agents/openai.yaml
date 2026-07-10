@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian Reference Doc"
+  short_description: "Create Obsidian source records and local copies."
+  default_prompt: "Use $obsidian-reference-doc to save this external source as an 81_REFERENCES note with verified metadata and local copies where appropriate."
