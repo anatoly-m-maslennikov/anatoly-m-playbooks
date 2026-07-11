@@ -7,12 +7,8 @@ description: Rewrite an article-generation prompt by comparing source material, 
 
 Use this skill when the user has source material, an original article-generation prompt, and a redacted article that represents the desired final quality.
 
-Read `references/original_prompt.md` before producing the improved prompt. Follow its restrictions: infer reusable abstract patterns, do not provide explicit word substitutions, do not quote long passages from the redacted article, and do not rely on lexical replacement tables.
+When triggered, read `references/original_prompt.md`; it is the method/rule reference, not a substitute for the user's runtime original prompt. Then compare the user-provided materials, normally ordered as source material, original prompt, redacted article. If required material is missing and the task cannot proceed, ask only for the missing item.
 
-## Input contract
+Preserve the reference safety contract: infer reusable abstract patterns; do not output explicit word substitutions, synonym lists, lexical replacement tables, or long/private source or redacted-article excerpts.
 
-Expect materials in this order when available: source material, original prompt, redacted article. If one is missing and the task cannot proceed, ask only for the missing item.
-
-## Output contract
-
-Return an improved reusable prompt in a Markdown code block plus a brief rationale with 3-7 bullets. Keep the rationale about generalized style, structure, and process changes, not word swaps.
+Return only an improved reusable article-generation prompt in a Markdown code block plus a brief 3-7 bullet rationale about generalized style, structure, and process changes, not word swaps.

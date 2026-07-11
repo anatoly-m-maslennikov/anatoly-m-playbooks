@@ -2,7 +2,7 @@
 type: meta
 subtype: prompt
 project: Colleagues, not guys
-prompt: [[CNG - Post to title, subtitiles - prompt]]
+prompt: [[cng_post_to_title_subtitle_promo_prompt_v2]]
 date: 2026-06-29
 status: active
 authorship: llm

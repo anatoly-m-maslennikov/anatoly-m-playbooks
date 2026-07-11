@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Template scraper for one-page 81_REFERENCES web/source imports.
 
-Copy this file to /tmp or 51_DEV/10_PROD/obsidian_vault_python/scripts/, then customize selectors and metadata for the source. Run through the vault Python project:
+Copy this file to a scratch directory or 51_DEV/10_PROD/obsidian_vault_python/scripts/, then customize selectors and metadata for the source. Run through the vault Python project:
 
-    uv --project 51_DEV/10_PROD/obsidian_vault_python run python /tmp/reference_web_scraper.py --url URL --output '81_REFERENCES/AREA/Author - Title (domain, YYYY-MM-DD).md' --title 'Author - Title (domain, YYYY-MM-DD)' --authors 'Author' --published YYYY-MM-DD --topics 'topic; another-topic' --dry-run
+    uv --project 51_DEV/10_PROD/obsidian_vault_python run python path/to/reference_web_scraper.py --url URL --output '81_REFERENCES/AREA/Author - Title (domain, YYYY-MM-DD).md' --title 'Author - Title (domain, YYYY-MM-DD)' --authors 'Author' --published YYYY-MM-DD --topics 'topic; another-topic' --dry-run
 
 Then rerun without --dry-run after checking the planned output.
 """
@@ -68,6 +68,7 @@ IMAGE_EXT_BY_CONTENT_TYPE = {
     "image/gif": ".gif",
     "image/svg+xml": ".svg",
 }
+VAULT_ROOT_MARKERS = ("81_REFERENCES", "82_ASSETS")
 
 
 @dataclass
@@ -95,10 +96,9 @@ def parse_args() -> argparse.Namespace:
 
 def repo_root_from_output(output: Path) -> Path:
     if output.is_absolute():
-        parts = output.parts
-        if "Obsidian_AM_V1" in parts:
-            idx = parts.index("Obsidian_AM_V1")
-            return Path(*parts[: idx + 1])
+        for candidate in (output.parent, *output.parents):
+            if all((candidate / marker).is_dir() for marker in VAULT_ROOT_MARKERS):
+                return candidate
         return Path.cwd()
     return Path.cwd()
 

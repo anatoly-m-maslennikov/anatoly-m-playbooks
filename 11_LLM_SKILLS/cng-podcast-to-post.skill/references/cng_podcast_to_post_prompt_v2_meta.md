@@ -2,7 +2,7 @@
 type: meta
 subtype: prompt
 project: Colleagues, not guys
-prompt: [[05_CNG_Podcast_to_Post_Prompt]]
+prompt: [[cng_podcast_to_post_prompt_v2]]
 date: 2026-06-29
 status: active
 authorship: llm

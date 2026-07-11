@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Skill Mirror"
+  short_description: "Keep ~/.codex custom skills symlinked from vault sources."
+  default_prompt: "Use $codex-skill-mirror to audit, import, or relink custom Codex skills between the vault and ~/.codex/skills."

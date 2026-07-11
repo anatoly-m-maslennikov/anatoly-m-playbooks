@@ -9,17 +9,17 @@ Use this skill inside Anatoly's current Obsidian vault when a user gives one fin
 
 Default input rule: if Claudian provides a `<current_note>` context and the user does not give an explicit different path or wikilink, use that current note as the source post. If the user gives a short episode/title phrase and `<current_note>` is present, treat the current note as authoritative unless the phrase clearly points to another note.
 
-The canonical source prompt is `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/07_Image Assets Orchestrator - prompt.md`. Treat that note and its linked prompt chain as the source of truth; reopen them at task time because prompt versions may change.
+The canonical source prompt is `references/07_Image Assets Orchestrator - prompt.md`. Treat that note and its linked prompt chain as the source of truth; reopen them at task time because prompt versions may change.
 
 ## Live prompt chain
 
 Read these notes before generating assets:
 
-1. `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/03_Style guide - prompt.md` for the fixed **Workplace Field Notes** visual identity.
-2. `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/04_Editorial Analysis - prompt.md` to extract the current post's organizational mechanism.
-3. `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/05_Art Direction - prompt.md` to turn the style guide, episode brief, and target format into image-generation prompts.
-4. `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/06_Creative Director QA prompt.md` to review generated images.
-5. `72_PUBLIC/11_Colleagues, not guys/02_CNG_PROMPTS_IMAGES/07_Image Assets Orchestrator - prompt.md` for the current exact file, YAML, body, and final-response contract.
+1. `references/03_Style guide - prompt.md` for the fixed **Workplace Field Notes** visual identity.
+2. `references/04_Editorial Analysis - prompt.md` to extract the current post's organizational mechanism.
+3. `references/05_Art Direction - prompt.md` to turn the style guide, episode brief, and target format into image-generation prompts.
+4. `references/06_Creative Director QA prompt.md` to review generated images.
+5. `references/07_Image Assets Orchestrator - prompt.md` for the current exact file, YAML, body, and final-response contract.
 
 ## Required output
 
