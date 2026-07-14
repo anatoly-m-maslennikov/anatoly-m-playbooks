@@ -1,15 +1,15 @@
 ---
-name: refactor-skills
+name: skill-refactor
 description: Create or refactor Codex, Claude, OpenCode, and Obsidian-vault skill packages to be lean, token-cheap, script-backed where useful, and portable across Linux, macOS, and Windows without changing their behavior. Use when the user asks to create, update, refactor, trim, clean up, slim down, make token-cheap, modernize, scriptify, validate, mirror, or reorganize a `SKILL.md` or skill folder under `52_LLM`, `~/.codex/skills`, `~/.claude/skills`, or a repo-local agent/skill package.
 ---
 
-# Refactor Skills
+# Skill Refactor
 
 Use this skill to create or improve a skill package while preserving its contract. This is usually refactoring, not redesign: keep what the skill does, remove weight, move mechanical work out of `SKILL.md`, make the result work on Linux, macOS, and Windows, and verify before trusting changes.
 
 ## Source reference
 
-This skill is adapted from a local Claude/TCS reference, but the public package is self-contained: use this `SKILL.md` plus `scripts/skill_refactor_audit.py` as the runtime contract. Historical TCS-specific source material is intentionally not mirrored to the public repo; do not require it at runtime or import TCS-specific Team Lead rules unless the current target is explicitly a TCS skill.
+This skill is adapted from a private local reference, but the public package is self-contained: use this `SKILL.md` plus `scripts/skill_refactor_audit.py` as the runtime contract. Historical source-specific material is intentionally not mirrored to the public repo; do not require it at runtime or import private rules unless the current target explicitly requires them.
 
 ## Target discovery
 
@@ -22,6 +22,10 @@ This skill is adapted from a local Claude/TCS reference, but the public package 
    - Installed global skill: `<codex-home>/skills/<name>` or `<claude-home>/skills/<name>`.
 4. If an installed global skill has a vault source, edit the vault source and keep/install the global path as a symlink. Use `52_LLM/00_UTILITIES/codex-skill-mirror.skill/` for generic Codex mirror audits, or the package's own installer when it has one.
 5. Do not edit generated caches, `__pycache__`, `.DS_Store`, action logs, or machine-local settings unless the user explicitly asks.
+
+## Naming
+
+For owned vault skills, follow `52_LLM/00_Methodology.md`: prefer action-last names shaped as `<domain>-<entity>-<action>`, with the unambiguous short form `<domain>-<action>` when an entity adds no information. When renaming, update the source folder, `name`, agent metadata and `$trigger`, live HUB references, installed mirrors, public-repo mappings/exports, and current documentation. Preserve historical logs and completed task records as history.
 
 ## Cross-platform requirement
 
@@ -41,7 +45,7 @@ Every skill created or updated by this workflow must be usable on Linux, macOS, 
 1. **Audit first.** Run the helper when useful:
 
 ```bash
-python3 52_LLM/00_UTILITIES/refactor-skills.skill/scripts/skill_refactor_audit.py <skill-folder-or-SKILL.md> --format markdown
+python3 52_LLM/00_UTILITIES/skill-refactor.skill/scripts/skill_refactor_audit.py <skill-folder-or-SKILL.md> --format markdown
 ```
 
 2. **Inventory load-bearing behavior.** List triggers, required inputs, side effects, safety gates, scripts, templates, references, validation commands, and install/mirror rules.
@@ -86,7 +90,7 @@ git diff --check -- <changed-files>
 If `quick_validate.py` lacks PyYAML in the active Python, run it through the vault Python environment when available:
 
 ```bash
-uv --project 51_DEV/10_PROD/obsidian_vault_python run python <skill-creator-quick-validate.py> <skill-folder>
+uv --project 51_DEV/50_MAINTENANCE/obsidian_vault_python run python <skill-creator-quick-validate.py> <skill-folder>
 ```
 
 For scripts that write files, run their read-only or dry-run mode against real target data before any apply/execute mode. For skill text refactors, compare before/after line counts and confirm the trigger description still covers the same user intents.
