@@ -28,7 +28,7 @@ The methodology moved to a separate repository: [DSET Loops Framework](https://g
 | [HH CV to Good Resume](11_LLM_SKILLS/hh-cv-to-good-resume.skill/) | Convert Russian HeadHunter or hh.ru resume/CV exports into concise professional resume drafts for a target role. | `11_LLM_SKILLS/hh-cv-to-good-resume.skill/` |
 | [Obsidian Reference Doc](11_LLM_SKILLS/obsidian-reference-doc.skill/) | Create or update Obsidian source/reference records for third-party material. | `11_LLM_SKILLS/obsidian-reference-doc.skill/` |
 | [Refine Article Prompt](11_LLM_SKILLS/refine-article-prompt-from-redacted-example.skill/) | Rewrite an article-generation prompt by comparing source material, an original prompt, and a redacted target article. | `11_LLM_SKILLS/refine-article-prompt-from-redacted-example.skill/` |
-| [Skill Refactor](11_LLM_SKILLS/skill-refactor.skill/) | Create or refactor Codex, Claude, OpenCode, and Obsidian-vault skill packages to be lean, token-cheap, script-backed where useful, and portable across Linux, macOS, and Windows without changing their behavior. | `11_LLM_SKILLS/skill-refactor.skill/` |
+| [Skill Refactor](11_LLM_SKILLS/skill-refactor.skill/) | Create or refactor portable Codex, Claude, OpenCode, and similar agent skill packages while preserving behavior and safety. | `11_LLM_SKILLS/skill-refactor.skill/` |
 | [System Prompt Generator](11_LLM_SKILLS/system-prompt-generator.skill/) | Generate a production-ready system prompt for a specified LLM role, goal, audience, context, task type, output format, browsing/citation policy, and quality bar. | `11_LLM_SKILLS/system-prompt-generator.skill/` |
 
 ## License

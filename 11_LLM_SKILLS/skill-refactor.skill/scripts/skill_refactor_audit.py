@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-"""Read-only audit helper for refactoring Codex/Claude/Obsidian skill folders."""
+"""Read-only audit helper for portable agent skill folders."""
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import shlex
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
 LOCAL_PATTERNS = (".local.",)
 CACHE_NAMES = {"__pycache__", ".DS_Store"}
 RESOURCE_DIRS = ("agents", "scripts", "references", "assets")
+SKIP_DIRS = {".git", ".hg", ".svn", "node_modules", ".venv", "venv"}
 
 
 def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
@@ -34,7 +38,7 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
 def iter_files(root: Path) -> list[Path]:
     files: list[Path] = []
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d not in {".git", ".obsidian", "node_modules"}]
+        dirnames[:] = [name for name in dirnames if name not in SKIP_DIRS]
         for filename in filenames:
             files.append(Path(dirpath) / filename)
     return sorted(files)
@@ -57,6 +61,23 @@ def detect_code_fences(text: str) -> dict[str, int]:
     return counts
 
 
+def format_command(parts: list[str]) -> str:
+    """Format an argument list for the current operating system."""
+    if os.name == "nt":
+        return subprocess.list2cmdline(parts)
+    return shlex.join(parts)
+
+
+def suggested_checks(root: Path, scripts: list[Path]) -> list[str]:
+    checks: list[str] = []
+    py_files = [path for path in scripts if path.suffix.lower() == ".py"]
+    if py_files:
+        checks.append(format_command([sys.executable, "-m", "py_compile", *(str(path) for path in py_files)]))
+    checks.append(f"Run the active platform's native skill validator against {root} when available.")
+    checks.append(f"Review the version-control diff and whitespace for {root} when it is tracked.")
+    return checks
+
+
 def audit(target: Path) -> dict[str, Any]:
     target = target.expanduser().resolve()
     skill_file = target if target.name == "SKILL.md" else target / "SKILL.md"
@@ -73,10 +94,14 @@ def audit(target: Path) -> dict[str, Any]:
     text = skill_file.read_text(encoding="utf-8", errors="replace")
     frontmatter, body = parse_frontmatter(text)
     files = iter_files(root)
-    rel_files = [str(p.relative_to(root)) for p in files]
-    local_state = [f for f in rel_files if any(part in CACHE_NAMES for part in Path(f).parts) or any(pat in f for pat in LOCAL_PATTERNS)]
-    markdown_files = [p for p in files if p.suffix.lower() == ".md"]
-    scripts = [p for p in files if p.suffix.lower() in {".py", ".sh", ".mjs", ".js", ".ts"}]
+    rel_files = [str(path.relative_to(root)) for path in files]
+    local_state = [
+        path
+        for path in rel_files
+        if any(part in CACHE_NAMES for part in Path(path).parts) or any(pattern in path for pattern in LOCAL_PATTERNS)
+    ]
+    markdown_files = [path for path in files if path.suffix.lower() == ".md"]
+    scripts = [path for path in files if path.suffix.lower() in {".py", ".sh", ".mjs", ".js", ".ts"}]
 
     result.update(
         {
@@ -90,47 +115,27 @@ def audit(target: Path) -> dict[str, Any]:
             "files": rel_files,
             "local_state_candidates": local_state,
             "large_markdown_files": [
-                {"path": str(p.relative_to(root)), "lines": line_count(p)} for p in markdown_files if line_count(p) >= 120
+                {"path": str(path.relative_to(root)), "lines": line_count(path)}
+                for path in markdown_files
+                if line_count(path) >= 120
             ],
-            "script_files": [str(p.relative_to(root)) for p in scripts],
+            "script_files": [str(path.relative_to(root)) for path in scripts],
             "suggested_checks": suggested_checks(root, scripts),
         }
     )
     return result
 
 
-def suggested_checks(root: Path, scripts: list[Path]) -> list[str]:
-    checks: list[str] = []
-    py_files = [p for p in scripts if p.suffix.lower() == ".py"]
-    sh_files = [p for p in scripts if p.suffix.lower() == ".sh"]
-    if py_files:
-        checks.append("python3 -m py_compile " + " ".join(str(p) for p in py_files))
-    if sh_files:
-        checks.append("bash -n " + " ".join(str(p) for p in sh_files))
-    checks.append(f"python3 {quick_validate_path_hint()} {root}")
-    checks.append(f"git diff --check -- {root}")
-    return checks
-
-
-def quick_validate_path_hint() -> str:
-    codex_home = os.environ.get("CODEX_HOME")
-    if codex_home:
-        base = Path(codex_home)
-    else:
-        base = Path.home() / ".codex"
-    return str(base / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py")
-
-
 def to_markdown(data: dict[str, Any]) -> str:
     if not data.get("exists"):
         return f"# Skill refactor audit\n\nMissing SKILL.md: `{data['skill_file']}`\n"
-    fm = data.get("frontmatter", {})
+    frontmatter = data.get("frontmatter", {})
     lines = [
         "# Skill refactor audit",
         "",
         f"- Root: `{data['root']}`",
-        f"- Name: `{fm.get('name', '')}`",
-        f"- Description present: {'yes' if fm.get('description') else 'no'}",
+        f"- Name: `{frontmatter.get('name', '')}`",
+        f"- Description present: {'yes' if frontmatter.get('description') else 'no'}",
         f"- SKILL.md lines: {data['skill_md_lines']}",
         f"- Files: {data['file_count']}",
         f"- Scripts: {', '.join(data['script_files']) if data['script_files'] else 'none'}",
@@ -146,8 +151,8 @@ def to_markdown(data: dict[str, Any]) -> str:
             lines.append(f"- `{item['path']}` — {item['lines']} lines")
     if data["code_fences"]:
         lines.extend(["", "## Code fences"])
-        for lang, count in sorted(data["code_fences"].items()):
-            lines.append(f"- `{lang}`: {count}")
+        for language, count in sorted(data["code_fences"].items()):
+            lines.append(f"- `{language}`: {count}")
     lines.extend(["", "## Suggested checks"])
     for check in data["suggested_checks"]:
         lines.append(f"- `{check}`")
